@@ -3,17 +3,17 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 
 const GuessEditor: React.FC = () => {
+    const { runId } = useParams();
     const [ error, setError ] = useState<string | null>(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const { runId } = useParams();
         if (!runId) {
             setError("Run not found.");
         } else {
             
         }
-    }, [ dispatch ]);
+    }, [ runId, dispatch ]);
     
     return (
         <div>

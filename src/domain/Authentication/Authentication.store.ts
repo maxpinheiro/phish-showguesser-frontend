@@ -1,15 +1,15 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../../app/store/store";
-import { attemptLogin } from "./Authentication.api";
+import { RootState } from "../../app/store/store";
+import { attemptLogin } from "../../api/Authentication.api";
 
 export interface AuthenticationState {
     loggedIn: boolean,
-    userId: string | undefined
+    userId: string | null
 }
 
 const initialState: AuthenticationState = {
     loggedIn: false,
-    userId: undefined
+    userId: null
 }
 
 const logInReducer = (state: AuthenticationState, action: PayloadAction<string>) => ({
@@ -21,7 +21,7 @@ const logInReducer = (state: AuthenticationState, action: PayloadAction<string>)
 const logOutReducer = (state: AuthenticationState) => ({
     ...state,
     loggedIn: false,
-    userId: undefined
+    userId: null
 });
 
 export const authenticationSlice = createSlice({
@@ -47,6 +47,6 @@ export const tryLogin = createAsyncThunk(
 */
 
 export const selectIsLoggedIn = (state: RootState): boolean => state.authentication.loggedIn;
-export const selectUserId = (state: RootState): string | undefined => state.authentication.userId;
+export const selectUserId = (state: RootState): string | null => state.authentication.userId;
 
 export const authenticationReducer = authenticationSlice.reducer;

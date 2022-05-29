@@ -1,5 +1,5 @@
-import { apiRoot, ResponseStatus } from "../../../app/store/store";
-import { Score } from "../../../types/Score.type";
+import { apiRoot, ResponseStatus } from "../app/store/store";
+import { Score } from "../types/Score.type";
 
 
 export const getScoresForRun = (runId: string): Promise<Score[] | ResponseStatus.UnknownError> => {

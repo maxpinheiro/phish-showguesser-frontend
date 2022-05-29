@@ -1,31 +1,32 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { User } from "../../../types/User.type";
-import { attemptSignup } from "../store/Authentication.api";
-import { logIn } from "../store/Authentication.store";
+import { User } from "../../types/User.type";
+import { attemptLogin, LoginResponse } from "../../api/Authentication.api";
+import { logIn } from "./Authentication.store";
 
-const Signup: React.FC = () => {
+
+const Login: React.FC = () => {
     const dispatch = useDispatch();
     const [ username, setUsername ] = useState<string | null>(null);
     const [ password, setPassword ] = useState<string | null>(null);
     const [ error, setError ] = useState<string | null>(null);
 
-    const trySignup = async (username: string | null, password: string | null) => {
+    const tryLogin = async (username: string | null, password: string | null) => {
         if (username === null) {
-            setError('missing username');
+            setError('Missing username.');
         } else if (password === null) {
-            setError('missing password');
+            setError('Missing password.');
         } else {
-            const response = await attemptSignup(username, password);
+            const response = await attemptLogin(username, password);
             if (response instanceof Object) {
                 const user = response as User;
                 dispatch(logIn(user.id));
-            } else if (response === 'username taken') {
-                setError('Username already exists.');
-            } else if (response === 'missing info') {
-                setError('missing info');
+            } else if (response === 'incorrect password') {
+                setError('Invalid password.');
+            } else if (response === 'incorrect username') {
+                setError('Invalid username.');
             } else {
-                setError('unknown error');
+                setError('An unknown error occurred. Please retry and/or refresh the page.');
             }
         }
     }
@@ -43,9 +44,9 @@ const Signup: React.FC = () => {
                     <input type="text" value={password || ''} onChange={e => setPassword(e.target.value)} placeholder="password" />
                 </label>
             </div>
-            <button onClick={() => trySignup(username, password)}>Login</button>
+            <button onClick={() => tryLogin(username, password)}>Login</button>
         </div>
     );
 }
 
-export default Signup;
+export default Login;

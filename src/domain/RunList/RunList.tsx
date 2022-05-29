@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { ResponseStatus } from "../../../app/store/store";
-import { Run } from "../../../types/Run.type";
-import { getAllRuns } from "../store/Runs.api";
-import { saveRuns, selectRuns } from "../store/Runs.store";
+import { ResponseStatus } from "../../app/store/store";
+import { Run } from "../../types/Run.type";
+import { getAllRuns } from "../../api/Runs.api";
+import { saveRuns, selectRuns } from "./RunList.store";
+import { formatDateRange } from "../../shared/util/utils";
 
-const RunsList: React.FC = () => {
+const RunList: React.FC = () => {
     const runs: Run[] = useSelector(selectRuns);
     const [ openRunId, setOpenRunId ] = useState<string | null>(null);
     const [ error, setError ] = useState<string | null>(null);
@@ -28,10 +29,11 @@ const RunsList: React.FC = () => {
             <div>
                 <Link to="/runs">All Runs</Link>
             </div>
+            { error && <p>{error}</p> }
             { runs.map(run => (
                 <div id={run.id}>
                     <div onClick={() => setOpenRunId(runId => runId === run.id? null : run.id)}> 
-                        <p>{run.name}</p>
+                        <p>{`${formatDateRange(run.dates)}: ${run.name}`}</p>
                     </div>
                     {
                         openRunId === run.id &&
@@ -47,4 +49,4 @@ const RunsList: React.FC = () => {
     )
 }
 
-export default RunsList;
+export default RunList;
