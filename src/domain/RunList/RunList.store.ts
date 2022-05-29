@@ -13,7 +13,7 @@ const initialState: RunListState = {
 
 const saveRunsReducer = (state: RunListState, action: PayloadAction<Run[]>) => ({
     ...state,
-    runs: action.payload
+    runs: action.payload || state.runs
 });
 
 export const runListSlice = createSlice({
