@@ -29,6 +29,7 @@ const RunList: React.FC = () => {
             <div>
                 <Link to="/runs">All Runs</Link>
             </div>
+            <p>Runs</p>
             { error && <p>{error}</p> }
             { runs.map(run => (
                 <div id={run.id}>

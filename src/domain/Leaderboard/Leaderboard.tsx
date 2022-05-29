@@ -5,17 +5,18 @@ import { ResponseStatus } from "../../app/store/store";
 import { formatDateRange, rankScores } from "../../shared/util/utils";
 import { getUserListByIds } from "../../api/User.api";
 import { getScoresForRun } from "../../api/Scores.api";
-import { saveScores, saveUsers, saveRun, selectScoresByUser, selectRankedUsers, selectUsersDict, selectRun } from "./Leaderboard.store";
+import { saveRun, saveScores, saveUsers, selectRankedUsers, selectRun, selectScoresByUser, selectUsersDict } from "./Leaderboard.store";
 import { getRunById } from "../../api/Runs.api";
-import { RunID } from "../../types/Run.type";
-import { UserID } from "../../types/User.type";
+import { Run, RunID } from "../../types/Run.type";
+import { User, UserID } from "../../types/User.type";
+import { Score } from "../../types/Score.type";
 
 const RunLeaderboard: React.FC = () => {
     const { runId } = useParams();
     const rankedUsers: ({userId: string, points: number})[] = useSelector(selectRankedUsers);
-    const scoresByUser = useSelector(selectScoresByUser);
-    const users = useSelector(selectUsersDict);
-    const run = useSelector(selectRun);
+    const scoresByUser: Record<UserID, Score[]> = useSelector(selectScoresByUser);
+    const users: Record<UserID, User> = useSelector(selectUsersDict);
+    const run: Run | null = useSelector(selectRun);
     
     const [ openUsers, setOpenUsers ] = useState<Record<string, boolean>>({});
     const [ error, setError ] = useState<string | null>(null);
@@ -83,7 +84,7 @@ const RunLeaderboard: React.FC = () => {
                 <div id={userId}>
                     <div onClick={() => openUsers[userId] ? closeUser(userId) : openUser(userId)}>
                         <p>{idx + 1}.</p>
-                        <p>{users[userId]?.username || userId}</p>
+                        <p>{users[userId as UserID]?.username || userId}</p>
                         <p>{points}</p>
                     </div>
                     { openUsers[userId] &&
