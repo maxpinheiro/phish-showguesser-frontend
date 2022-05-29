@@ -1,5 +1,5 @@
-import { apiRoot } from "../../../app/store/store";
-import { User } from "../../../types/User.type";
+import { apiRoot } from "../app/store/store";
+import { User } from "../types/User.type";
 
 
 export type LoginResponse = User | 'incorrect password' | 'incorrect username' | null;

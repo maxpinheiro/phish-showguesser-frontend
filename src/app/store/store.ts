@@ -1,12 +1,12 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import { authenticationReducer } from '../../domain/Authentication/store/Authentication.store';
-import { guessEditorReducer } from '../../domain/GuessEditor/store/GuessEditor.store';
-import { guessesReducer } from '../../domain/Guesses/store/Guesses.store';
-import { runsReducer } from '../../domain/Runs/store/Runs.store';
-import { scoresReducer } from '../../domain/Scores/store/Scores.store';
-import { userReducer } from '../../domain/User/store/User.store';
+import { authenticationReducer } from '../../domain/Authentication/Authentication.store';
+import { guessEditorReducer } from '../../domain/GuessEditor/GuessEditor.store';
+import { guessListReducer } from '../../domain/GuessList/GuessList.store';
+import { runListReducer } from '../../domain/RunList/RunList.store';
+import { leaderboardReducer } from '../../domain/Leaderboard/Leaderboard.store';
+import { profilePageReducer } from '../../domain/ProfilePage/ProfilePage.store';
 
-export const apiRoot = 'localhost:5000';
+export const apiRoot = 'http://localhost:5000';
 
 export enum ResponseStatus {
   Success = 200,
@@ -18,10 +18,10 @@ export const store = configureStore({
   reducer: {
     authentication: authenticationReducer,
     guessEditor: guessEditorReducer,
-    guesses: guessesReducer,
-    runs: runsReducer,
-    scores: scoresReducer,
-    user: userReducer,
+    guessList: guessListReducer,
+    runList: runListReducer,
+    leaderboard: leaderboardReducer,
+    profilePage: profilePageReducer,
   },
 });
 

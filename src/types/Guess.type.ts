@@ -10,4 +10,5 @@ export interface Guess {
     songId: string,
     songName: string,
     encore: boolean,
+    completed: boolean
 }

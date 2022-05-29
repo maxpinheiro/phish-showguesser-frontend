@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { ResponseStatus } from "../../../app/store/store";
-import { organizeArrayByField, totalScoresForRuns } from "../../../shared/util/utils";
-import { Run, RunID } from "../../../types/Run.type";
-import { Score } from "../../../types/Score.type";
-import { User } from "../../../types/User.type";
-import { getRunListByIds } from "../../Runs/store/Runs.api";
-import { getScoresForUser } from "../../Scores/store/Scores.api";
-import { getUserById } from "../store/User.api";
-import { saveCurrentUser, saveUserRuns, saveUserScores, selectCurrentUser, selectCurrentUserRunsOrganized, selectCurrentUserScoresOrganized } from "../store/User.store";
+import { ResponseStatus } from "../../app/store/store";
+import { organizeArrayByField, totalScoresForRuns } from "../../shared/util/utils";
+import { Run, RunID } from "../../types/Run.type";
+import { Score } from "../../types/Score.type";
+import { User } from "../../types/User.type";
+import { getRunListByIds } from "../../api/Runs.api";
+import { getScoresForUser } from "../../api/Scores.api";
+import { getUserById } from "../../api/User.api";
+import { saveUser, saveRunRecord, saveScoreRecord, selectUser, selectRunRecordOrganized, selectScoreRecordOrganized } from "./ProfilePage.store";
+import { AvatarIconLarge } from "../AvatarCreator/AvatarCreator";
 
 const ProfilePage: React.FC = () => {
-    const user: User | null = useSelector(selectCurrentUser);
-    const userScoresOrganized: Record<RunID, Score[]> = useSelector(selectCurrentUserScoresOrganized);
-    const userRunsOrganized: Record<RunID, Run> = useSelector(selectCurrentUserRunsOrganized);;
-    const scoresForRuns: Record<RunID, number> = totalScoresForRuns(userScoresOrganized);
+    const { userId } = useParams();
+    const user: User | null = useSelector(selectUser);
+    const scoreRecordOrganized: Record<RunID, Score[]> = useSelector(selectScoreRecordOrganized);
+    const runRecordOrganized: Record<RunID, Run> = useSelector(selectRunRecordOrganized);;
+    const scoresForRuns: Record<RunID, number> = totalScoresForRuns(scoreRecordOrganized);
+    
     const [ openRunId, setOpenRunId ] = useState<string | null>(null);
     const [ error, setError ] = useState<string | null>(null);
     const dispatch = useDispatch();
@@ -42,21 +45,20 @@ const ProfilePage: React.FC = () => {
             setError("Unknown error");
             return;
         }
-        dispatch(saveCurrentUser(user));
-        dispatch(saveUserScores(scores));
-        dispatch(saveUserRuns(runs));
+        dispatch(saveUser(user));
+        dispatch(saveScoreRecord(scores));
+        dispatch(saveRunRecord(runs));
     }
 
 
 
     useEffect(() => {
-        const { userId } = useParams();
         if (!userId) {
             setError("User not found.");
         } else {
             collectionProfilePageInfo(userId);
         }
-    }, [ dispatch ]);
+    }, [ userId, dispatch ]);
 
     return (
         <div>
@@ -64,15 +66,16 @@ const ProfilePage: React.FC = () => {
             { 
                 user && 
                 <div>
-                    <div>
+                    <div className="flex-row">
+                        <AvatarIconLarge {...user.avatar} />
                         <h2>{user.username}</h2>
                     </div>
                     <div>
                         <p>Record:</p>
-                        { Object.entries(userScoresOrganized).map(([runId, scores]) => (
+                        { Object.entries(scoreRecordOrganized).map(([runId, scores]) => (
                             <div id={runId}>
                                 <div onClick={() => setOpenRunId(id => id === runId ? null : runId)}> 
-                                    <p>{userRunsOrganized[runId as RunID]?.name || ''}</p>
+                                    <p>{runRecordOrganized[runId as RunID]?.name || ''}</p>
                                 </div>
                                 {
                                     openRunId === runId &&

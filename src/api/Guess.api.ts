@@ -1,5 +1,5 @@
-import { apiRoot, ResponseStatus } from "../../../app/store/store";
-import { Guess } from "../../../types/Guess.type";
+import { apiRoot, ResponseStatus } from "../app/store/store";
+import { Guess } from "../types/Guess.type";
 
 export const getGuessesForRun = (runId: string): Promise<Guess[] | ResponseStatus.UnknownError> => {
     return new Promise(async (resolve) => {
@@ -7,7 +7,7 @@ export const getGuessesForRun = (runId: string): Promise<Guess[] | ResponseStatu
         if (response.status === 200) {
             const data = await response.json();
             if (data.hasOwnProperty('guesses')) {
-                resolve(data.run as Guess[]);
+                resolve(data.guesses as Guess[]);
             } else {
                 resolve(ResponseStatus.UnknownError);
             }
@@ -23,7 +23,7 @@ export const getGuessesForUserForRun = (userId: string, runId: string): Promise<
         if (response.status === 200) {
             const data = await response.json();
             if (data.hasOwnProperty('guesses')) {
-                resolve(data.run as Guess[]);
+                resolve(data.guesses as Guess[]);
             } else {
                 resolve(ResponseStatus.UnknownError);
             }
@@ -39,7 +39,7 @@ export const getGuessesForUser = (userId: string): Promise<Guess[] | ResponseSta
         if (response.status === 200) {
             const data = await response.json();
             if (data.hasOwnProperty('guesses')) {
-                resolve(data.run as Guess[]);
+                resolve(data.guesses as Guess[]);
             } else {
                 resolve(ResponseStatus.UnknownError);
             }

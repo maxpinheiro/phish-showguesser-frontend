@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../../app/store/store";
-import { Guess } from "../../../types/Guess.type";
+import { RootState } from "../../app/store/store";
+import { Guess } from "../../types/Guess.type";
 
 export interface GuessEditorState {
     guesses: Guess[]

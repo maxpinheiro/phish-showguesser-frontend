@@ -1,32 +1,31 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { User } from "../../../types/User.type";
-import { attemptLogin, LoginResponse } from "../store/Authentication.api";
-import { logIn } from "../store/Authentication.store";
+import { User } from "../../types/User.type";
+import { attemptSignup } from "../../api/Authentication.api";
+import { logIn } from "./Authentication.store";
 
-
-const Login: React.FC = () => {
+const Signup: React.FC = () => {
     const dispatch = useDispatch();
     const [ username, setUsername ] = useState<string | null>(null);
     const [ password, setPassword ] = useState<string | null>(null);
     const [ error, setError ] = useState<string | null>(null);
 
-    const tryLogin = async (username: string | null, password: string | null) => {
+    const trySignup = async (username: string | null, password: string | null) => {
         if (username === null) {
-            setError('Missing username.');
+            setError('missing username');
         } else if (password === null) {
-            setError('Missing password.');
+            setError('missing password');
         } else {
-            const response = await attemptLogin(username, password);
+            const response = await attemptSignup(username, password);
             if (response instanceof Object) {
                 const user = response as User;
                 dispatch(logIn(user.id));
-            } else if (response === 'incorrect password') {
-                setError('Invalid password.');
-            } else if (response === 'incorrect username') {
-                setError('Invalid username.');
+            } else if (response === 'username taken') {
+                setError('Username already exists.');
+            } else if (response === 'missing info') {
+                setError('missing info');
             } else {
-                setError('An unknown error occurred. Please retry and/or refresh the page.');
+                setError('unknown error');
             }
         }
     }
@@ -44,9 +43,9 @@ const Login: React.FC = () => {
                     <input type="text" value={password || ''} onChange={e => setPassword(e.target.value)} placeholder="password" />
                 </label>
             </div>
-            <button onClick={() => tryLogin(username, password)}>Login</button>
+            <button onClick={() => trySignup(username, password)}>Login</button>
         </div>
     );
 }
 
-export default Login;
+export default Signup;

@@ -1,5 +1,5 @@
-import { apiRoot, ResponseStatus } from "../../../app/store/store";
-import { User } from "../../../types/User.type";
+import { apiRoot, ResponseStatus } from "../app/store/store";
+import { User } from "../types/User.type";
 
 export const getAllUsers = (): Promise<User[] | ResponseStatus.UnknownError> => {
     return new Promise(async (resolve) => {
