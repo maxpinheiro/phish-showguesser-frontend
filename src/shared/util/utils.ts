@@ -6,12 +6,12 @@ import { UserID } from "../../types/User.type";
 export const formatDateRange = (dates: DateString[], withYear?: boolean): string => {
     if (dates.length < 2) return '';
     let dateObjs: Date[] = dates.map(date => new Date(date));
-    dateObjs.sort();
-    let date1 = `${dateObjs[0].getMonth()}/${dateObjs[0].getDate()}`;
-    let date2 = `${dateObjs[dateObjs.length-1].getMonth()}/${dateObjs[dateObjs.length-1].getDate()}`;
+    dateObjs.sort((a, b) => a.getTime() - b.getTime());
+    let date1 = `${dateObjs[0].getMonth()+1}/${dateObjs[0].getDate()}`;
+    let date2 = `${dateObjs[dateObjs.length-1].getMonth()+1}/${dateObjs[dateObjs.length-1].getDate()}`;
     if (withYear) {
-        date1 += `/${Math.floor(dateObjs[0].getFullYear() / 100)}`;
-        date2 += `/${Math.floor(dateObjs[dateObjs.length-1].getFullYear() / 100)}`;
+        date1 += `/${dateObjs[0].getFullYear() % 100}`;
+        date2 += `/${dateObjs[dateObjs.length-1].getFullYear() % 100}`;
     }
     return `${date1} - ${date2}`;
 }
@@ -90,3 +90,21 @@ export const rankUsers = (scores: Score[]): Record<UserID, number> => {
     return usersDict;
 }
 
+/*
+    completed, non-encore,
+    completed, encore,
+    uncompleted, non-encore
+    uncompleted, encore
+*/
+export const guessSorter = (a: Guess, b: Guess): number => {
+    if (a.completed && !b.completed) return -1;
+    else if (b.completed && !a.completed) return 1;
+    else if (a.completed && b.completed) {
+        if (a.encore && !b.encore) return 1;
+        else if (b.encore && !a.encore) return -1;
+    } else if (!a.completed && !b.completed) { 
+        if (a.encore && !b.encore) return 1;
+        else if (b.encore && !a.encore) return -1;
+    }
+    return 0;
+}

@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction, Selector } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store/store";
-import { arrayToDictByID, organizeArrayByField } from "../../shared/util/utils";
+import { arrayToDictByID, guessSorter, organizeArrayByField } from "../../shared/util/utils";
 import { Guess } from "../../types/Guess.type";
 import { Run, RunID } from "../../types/Run.type";
 import { User, UserID } from "../../types/User.type";
@@ -45,7 +45,30 @@ export const guessListSlice = createSlice({
 export const { storeGuesses, storeUsers, storeRun } = guessListSlice.actions;
 
 export const selectGuesses: Selector<RootState, Guess[]> = state => state.guessList.guesses;
-export const selectGuessesOrganized: Selector<RootState, Record<RunID, Guess[]>> = createSelector(selectGuesses, (guesses) => organizeArrayByField(guesses, "runId"));
+export const selectGuessesByUser: Selector<RootState, Record<UserID, Guess[]>> = createSelector(selectGuesses, (guesses) => organizeArrayByField(guesses, "userId"));
+export const selectOrganizedGuessesByUser: Selector<RootState, Record<UserID, {"complete": Guess[], "incomplete": Guess[]}>> = createSelector(selectGuessesByUser, (guessesDict) => {
+    let orderedGuessesDict: Record<UserID, {"complete": Guess[], "incomplete": Guess[]}> = {};
+    Object.keys(guessesDict).forEach(userId => {
+        orderedGuessesDict[userId as UserID] = {"complete": [], "incomplete": []};
+        let guesses = [ ...guessesDict[userId as UserID] ];
+        guesses.sort(guessSorter);
+        const pivot = guesses.findIndex(guess => !guess.completed);
+        orderedGuessesDict[userId as UserID]["complete"] = guesses.slice(0, pivot);
+        orderedGuessesDict[userId as UserID]["incomplete"] = guesses.slice(pivot);
+    })
+    return orderedGuessesDict;
+});
+/*
+export const selectOrganizedGuessesByUser: Selector<RootState, Record<UserID, Guess[]>> = createSelector(selectGuessesByUser, (guessesDict) => {
+    let orderedGuessesDict: Record<UserID, Guess[]> = {};
+    Object.keys(guessesDict).forEach(userId => {
+        let guesses = [ ...guessesDict[userId as UserID] ];
+        guesses.sort(guessSorter);
+        orderedGuessesDict[userId as UserID] = guesses;
+    })
+    return orderedGuessesDict;
+});
+*/
 
 export const selectUsers: Selector<RootState, User[]> = state => state.guessList.users;
 export const selectUsersOrganized: Selector<RootState, Record<UserID, User>> = createSelector(selectUsers, (users) => arrayToDictByID(users));

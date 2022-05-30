@@ -1,0 +1,41 @@
+$justifications: center, space-around, space-between, space-evenly, end;
+
+.row {
+    display: flex;
+    flex-direction: row;
+    
+    @each $justification in $justifications {
+        &--#{$justification} {
+            @extend .row;
+            justify-content: $justification;
+        }
+    }
+
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+
+    &--centered {
+        @extend .column;
+        align-items: center;
+    }
+
+}
+
+.align-center {
+    align-items: center;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.w-75 {
+    width: 75%;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}

@@ -1,0 +1,33 @@
+// GLOBAL
+
+a {
+    text-decoration: none;
+    color: inherit;
+    
+    &:hover{
+        color: #2D45E0;
+    }
+}
+
+// PRESET TYPOGRAPHY
+
+.header {
+    font-size: 48px;
+    font-weight: 500;
+}
+
+// SIZES
+
+// COLORS
+
+.text-50pct {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+// UTILITIES
+
+// DECORATIONS/STYLES
+
+.text-crossed {
+  text-decoration: line-through;
+}

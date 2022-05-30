@@ -37,7 +37,7 @@ export const getUserById = (userId: string): Promise<User | ResponseStatus.Unkno
 
 export const getUserListByIds = (userIds: string[]): Promise<User[] | ResponseStatus.UnknownError> => {
     return new Promise(async (resolve) => {
-        const response = await fetch(`${apiRoot}/users?userIds=${userIds.join('-')}`);
+        const response = await fetch(`${apiRoot}/users?userIds=${userIds.join('_')}`);
         if (response.status === 200) {
             const data = await response.json();
             if (data.hasOwnProperty('users')) {

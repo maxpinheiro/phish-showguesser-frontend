@@ -1,96 +1,61 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
-import { ResponseStatus } from "../../app/store/store";
-import { organizeArrayByField } from "../../shared/util/utils";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { DropDownUpIcon, DropDownIcon } from "../../shared/icons/Dropdown";
 import { Guess } from "../../types/Guess.type";
-import { getUserListByIds } from "../../api/User.api";
-import { getGuessesForRun } from "../../api/Guess.api";
-import { selectGuessesOrganized, selectUsersOrganized, storeGuesses, storeRun, storeUsers } from "./GuessList.store";
-import { getRunById } from "../../api/Runs.api";
-import { RunID } from "../../types/Run.type";
 import { User, UserID } from "../../types/User.type";
 import { AvatarIcon } from "../AvatarCreator/AvatarCreator";
 
+interface GuessListProps {
+    organizedGuesses: Record<UserID, {"complete": Guess[], "incomplete": Guess[]}>,
+    users: Record<UserID, User>,
+}
 
-const GuessList: React.FC = () => {
-    const { runId } = useParams();
-    const [ error, setError ] = useState<string | null>(null);
-    const [ openUsers, setOpenUsers ] = useState<Record<string, boolean>>({});
-    const organizedGuesses: Record<UserID, Guess[]> = useSelector(selectGuessesOrganized);
-    const organizedUsers: Record<UserID, User> = useSelector(selectUsersOrganized);
-    const dispatch = useDispatch();
+const GuessList: React.FC<GuessListProps> = ({ organizedGuesses, users }) => {
+    const [ openUserIds, setOpenUserIds ] = useState<string[]>([]);
+    const toggleUser = (userId: string) => setOpenUserIds(ids => ids.includes(userId) ? ids.filter(id => id !== userId) : [ ...ids, userId ]);
 
-    const collectGuessListInfo = async (runId: RunID) => {
-        const guesses = await getGuessesForRun(runId);
-        if (guesses === ResponseStatus.UnknownError) {
-            setError("Unknown error");
-            return;
-        }
-        const guessesOrganized = organizeArrayByField(guesses, "userId");
-        const userIds = Object.keys(guessesOrganized);
-        const users = await getUserListByIds(userIds);
-        if (users === ResponseStatus.UnknownError) {
-            setError("Unknown error");
-            return;
-        }
-        const run = await getRunById(runId);
-        if (run === ResponseStatus.NotFound) {
-            setError("Run not found error");
-            return;
-        }
-        if (run === ResponseStatus.UnknownError) {
-            setError("Unknown error");
-            return;
-        }
-        dispatch(storeGuesses(guesses));
-        dispatch(storeUsers(users));
-        dispatch(storeRun(run));
-    }
-
-    useEffect(() => {
-        if (!runId) {
-            setError("Run not found");
-        } else {
-            collectGuessListInfo(runId as RunID);
-        }
-    }, [ runId, dispatch ]);
-
-    useEffect(() => {
-        let usersDict: Record<string, boolean> = {};
-        Object.keys(organizedGuesses).forEach(userId => {usersDict[userId] = false});
-        setOpenUsers(usersDict);
-    }, [ organizedGuesses ]);
-
-    const openUser = (userId: string) => setOpenUsers(usersDict => {usersDict[userId] = true; return usersDict});
-    const closeUser = (userId: string) => setOpenUsers(usersDict => {usersDict[userId] = false; return usersDict});
-    
     return (
-        <div>
+        <div className="column--centered w-100 max-w-500 mx-auto" id="guess-list">
             { Object.entries(organizedGuesses).map(([ userId, guesses ]) => (
-                <div key={userId}>
-                    <div className="flex-row" onClick={() => openUsers[userId] ? closeUser(userId) : openUser(userId)}>
-                        { /** <AvatarIcon {...organizedUsers[userId as UserID].avatar} /> **/ }
-                        <p>{organizedUsers[userId as UserID]?.username || userId}</p>
-                        { openUsers[userId] ?
-                            <div> v </div> :
-                            <div> ^ </div>
-                        }
+                <div key={userId} className="w-100">
+                    <div className="row--space-between align-center px-10" id="guess-user-header">
+                        <div className="row mx-bw-5 align-center">
+                            { users[userId as UserID].avatar && <AvatarIcon {...users[userId as UserID].avatar} /> }
+                            <Link className="ml-5" to={`/users/${userId}`}><p>{users[userId as UserID]?.username || userId}</p></Link>
+                            <p>{`- ${guesses.complete.length} completed`}</p>
+                        </div>
+                        <div className="flex-grow row--end pointer" onClick={() => toggleUser(userId)}>
+                            { openUserIds.includes(userId) ? <DropDownUpIcon  /> : <DropDownIcon /> }                            
+                        </div>
                     </div>
                     {
-                        openUsers[userId] &&
-                        <div className="flex-column">
-                            { guesses.map(guess => (
-                                <div key={guess.id}>
-                                    <p>{guess.songName}</p>
-                                </div>
-                            )) }
+                        openUserIds.includes(userId) &&
+                        <div className="px-10" id="user-guesses">
+                            <div className="column my-bw-10">
+                                { guesses["complete"].map(guess => (
+                                    <div key={guess.id}>
+                                        <a href={`https://www.phish.net/song/${guess.songId.substring(5)}`} target="_blank">
+                                            <p className="text-crossed text-50pct m-0">{guess.songName}{guess.encore ? " (Encore)" : ""}</p>
+                                        </a>
+                                    </div>
+                                )) }
+                            </div>
+                            <div className="divider" />
+                            <div className="column my-bw-10">
+                                { guesses["incomplete"].map(guess => (
+                                    <div key={guess.id}>
+                                        <a href={`https://www.phish.net/song/${guess.songId.substring(5)}`} target="_blank">
+                                            <p className="m-0">{guess.encore ? "Encore: " : ""}{guess.songName}</p>
+                                        </a>
+                                    </div>
+                                )) }
+                            </div>
                         </div>
                     }
-                </div>
+                </div> 
             )) }
         </div>
-    )
+    );
 }
 
 export default GuessList;
