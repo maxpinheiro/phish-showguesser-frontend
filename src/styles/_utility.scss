@@ -40,6 +40,10 @@
     margin-right: 5px;
 }
 
+.my-bw-5 > *:not(:last-child) {
+    margin-bottom: 5px;
+}
+
 .my-bw-10 > *:not(:last-child) {
     margin-bottom: 10px;
 }
@@ -54,6 +58,14 @@
     margin-bottom: auto;
 }
 
+.ml-auto {
+    margin-left: auto;
+}
+
+.mr-auto {
+    margin-right: auto;
+}
+
 .ml-1\/10 {
     margin-left: 10%;
 }
@@ -62,6 +74,10 @@
 
 .p-5-0 {
     padding: 5px 0px;
+}
+
+.p-5-10 {
+    padding: 5px 10px;
 }
 
 .px-5 {
@@ -74,7 +90,21 @@
     padding-right: 10px;
 }
 
+.py-5 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.py-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 // SIZING
+
+.h-10vh {
+    height: 10vh;
+}
 
 .h-20vh {
     height: 20vh;
@@ -91,4 +121,12 @@
     height: 1px;
     background-color: rgba(0, 0, 0, 0.25);
     margin: 10px 0px;
+}
+
+.rounded {
+    border-radius: 8px;
+}
+
+.rounded-lg {
+    border-radius: 10px;
 }

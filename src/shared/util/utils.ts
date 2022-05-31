@@ -1,7 +1,7 @@
 import { Guess } from "../../types/Guess.type";
 import { DateString } from "../../types/Run.type";
 import { Score } from "../../types/Score.type";
-import { UserID } from "../../types/User.type";
+import { emptyUser, User, UserID } from "../../types/User.type";
 
 export const formatDateRange = (dates: DateString[], withYear?: boolean): string => {
     if (dates.length < 2) return '';
@@ -79,6 +79,18 @@ export const rankScores = (scores: Score[]): ({userId: string, points: number})[
         scoresRanked.push({userId, points: scoresDict[userId as UserID].map(score => score.points).reduce((acc, curr) => acc + curr)});
     })
     return scoresRanked.sort((a, b) => a.points - b.points);
+}
+
+export const rankScoresObj = (scores: Score[], users: User[]): ({user: User, points: number})[] => {
+    const scoresDict: Record<UserID, Score[]> = organizeArrayByField(scores, "userId");
+    let scoresRanked: ({user: User, points: number})[] = [];
+    Object.keys(scoresDict).forEach(userId => {
+        scoresRanked.push({
+            user: users.find(u => u.id === userId) || emptyUser, 
+            points: scoresDict[userId as UserID].map(score => score.points).reduce((acc, curr) => acc + curr)
+        });
+    })
+    return scoresRanked.sort((a, b) => b.points - a.points);
 }
 
 export const rankUsers = (scores: Score[]): Record<UserID, number> => {

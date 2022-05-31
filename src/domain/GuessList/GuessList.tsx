@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { DropDownUpIcon, DropDownIcon } from "../../shared/icons/Dropdown";
 import { Guess } from "../../types/Guess.type";
 import { User, UserID } from "../../types/User.type";
-import { AvatarIcon } from "../AvatarCreator/AvatarCreator";
+import { AvatarIcon } from "../AvatarCreator/AvatarIcon";
 
 interface GuessListProps {
     organizedGuesses: Record<UserID, {"complete": Guess[], "incomplete": Guess[]}>,
@@ -13,6 +13,12 @@ interface GuessListProps {
 const GuessList: React.FC<GuessListProps> = ({ organizedGuesses, users }) => {
     const [ openUserIds, setOpenUserIds ] = useState<string[]>([]);
     const toggleUser = (userId: string) => setOpenUserIds(ids => ids.includes(userId) ? ids.filter(id => id !== userId) : [ ...ids, userId ]);
+    
+    if (Object.keys(organizedGuesses).length === 0) {
+        return (
+            <p className="text-centered">There are no guesses for this show yet!</p>
+        )
+    }
 
     return (
         <div className="column--centered w-100 max-w-500 mx-auto" id="guess-list">

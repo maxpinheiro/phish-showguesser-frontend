@@ -5,9 +5,10 @@ import Signup from "../domain/Authentication/Signup";
 import GuessEditor from "../domain/GuessEditor/GuessEditor";
 import GuessListContainer from "../domain/GuessList/GuessListContainer";
 import RunList from "../domain/RunList/RunList";
-import RunLeaderboard from "../domain/Leaderboard/Leaderboard";
+import LeaderboardContainer from "../domain/Leaderboard/LeaderboardContainer";
 import ProfilePage from "../domain/ProfilePage/ProfilePage";
 import Home from "./component/Home";
+import AvatarCreator from "../domain/AvatarCreator/AvatarCreator";
 
 const AppRouter: React.FC = () => (
     <Routes>
@@ -20,9 +21,9 @@ const AppRouter: React.FC = () => (
         <Route path="/guesses/:runId" element={<GuessListContainer />} />
         <Route path="/guesses/:runId/edit" element={<GuessEditor />} />
         { /* <Route path="/scores" element={<div />} /> */ }
-        <Route path="/scores/:runId" element={<RunLeaderboard />} />
+        <Route path="/scores/:runId" element={<LeaderboardContainer />} />
         <Route path="/users/:userId" element={<ProfilePage />} />
-        <Route path="/avatar-creator" element={<div />} />
+        <Route path="/avatar-creator" element={<AvatarCreator />} />
     </Routes>
 );
 

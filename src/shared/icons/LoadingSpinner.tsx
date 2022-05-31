@@ -6,14 +6,21 @@ interface SpinnerProps {
     height?: number,
     color?: string,
     secondaryColor?: string,
+    strokeWidth?: string,
     label?: string
 }
 
-const LoadingSpinner: React.FC<SpinnerProps> = (props) => (
-    <div>
-        <Oval {...props} />
-        {props.label && <p>{props.label}</p>}
-    </div>
+const LoadingSpinner: React.FC<SpinnerProps> = ({width, height, color, secondaryColor, strokeWidth, label}) => (
+    <>
+        <Oval 
+            width={width || 100} height={height || 100}
+            strokeWidth={strokeWidth || 5} 
+            color={color || "#E01212"} secondaryColor={secondaryColor || "#AB2626"}
+        />
+        <p>{label || "Loading..."}</p>
+    </>
 )
 
 export default LoadingSpinner;
+
+

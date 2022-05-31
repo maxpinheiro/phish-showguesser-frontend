@@ -10,16 +10,18 @@ import { getRunListByIds } from "../../api/Runs.api";
 import { getScoresForUser } from "../../api/Scores.api";
 import { getUserById } from "../../api/User.api";
 import { saveUser, saveRunRecord, saveScoreRecord, selectUser, selectRunRecordOrganized, selectScoreRecordOrganized } from "./ProfilePage.store";
-import { AvatarIconLarge } from "../AvatarCreator/AvatarCreator";
+import LoadingSpinner from "../../shared/icons/LoadingSpinner";
+import UserInfo from "./UserInfo";
 
 const ProfilePage: React.FC = () => {
     const { userId } = useParams();
     const user: User | null = useSelector(selectUser);
     const scoreRecordOrganized: Record<RunID, Score[]> = useSelector(selectScoreRecordOrganized);
-    const runRecordOrganized: Record<RunID, Run> = useSelector(selectRunRecordOrganized);;
+    const runRecordOrganized: Record<RunID, Run> = useSelector(selectRunRecordOrganized);
     const scoresForRuns: Record<RunID, number> = totalScoresForRuns(scoreRecordOrganized);
     
     const [ openRunId, setOpenRunId ] = useState<string | null>(null);
+    const [ status, setStatus ] = useState<"loading" | "loaded" | "error">("loading");
     const [ error, setError ] = useState<string | null>(null);
     const dispatch = useDispatch();
 
@@ -27,15 +29,18 @@ const ProfilePage: React.FC = () => {
         const user = await getUserById(userId);
         if (user === ResponseStatus.NotFound) {
             setError("User not found");
+            setStatus("error");
             return;
         }
         if (user === ResponseStatus.UnknownError) {
             setError("Unknown error");
+            setStatus("error");
             return;
         }
         const scores = await getScoresForUser(userId);
         if (scores === ResponseStatus.UnknownError) {
             setError("Unknown error");
+            setStatus("error");
             return;
         }
         const scoresOrganized = organizeArrayByField(scores, "runId");
@@ -43,14 +48,14 @@ const ProfilePage: React.FC = () => {
         const runs = await getRunListByIds(runIds);
         if (runs === ResponseStatus.UnknownError) {
             setError("Unknown error");
+            setStatus("error");
             return;
         }
         dispatch(saveUser(user));
         dispatch(saveScoreRecord(scores));
         dispatch(saveRunRecord(runs));
+        setStatus("loaded");
     }
-
-
 
     useEffect(() => {
         if (!userId) {
@@ -61,35 +66,16 @@ const ProfilePage: React.FC = () => {
     }, [ userId, dispatch ]);
 
     return (
-        <div>
-            { error && <p>{error}</p> }
-            { 
-                user && 
-                <div>
-                    <div className="flex-row">
-                        <AvatarIconLarge {...user.avatar} />
-                        <h2>{user.username}</h2>
-                    </div>
-                    <div>
-                        <p>Record:</p>
-                        { Object.entries(scoreRecordOrganized).map(([runId, scores]) => (
-                            <div id={runId}>
-                                <div onClick={() => setOpenRunId(id => id === runId ? null : runId)}> 
-                                    <p>{runRecordOrganized[runId as RunID]?.name || ''}</p>
-                                </div>
-                                {
-                                    openRunId === runId &&
-                                    <div className="flex-column">
-                                        
-                                    </div>
-                                }
-                            </div>
-                        ))
-                        }
-                    </div>
-                </div>
+        <div className="column--centered">
+            {
+                status === "loading" && <LoadingSpinner />
             }
-
+            { 
+                status === "loaded" && user && <UserInfo user={user} scoreRecordOrganized={scoreRecordOrganized} runRecordOrganized={runRecordOrganized} />
+            }
+            { 
+                status === "error" && <p>{error || "An unknown error occurred"}</p> 
+            }
         </div>
     )
 }

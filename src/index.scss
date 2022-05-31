@@ -1,6 +1,7 @@
 @use "styles/flex";
 @use "styles/typography";
 @use "styles/utility";
+@use "styles/colors";
 
 html {
   margin: 0;
@@ -12,6 +13,21 @@ body {
   font-family: 'Quicksand', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+button, input {
+  background-color: transparent;
+  border: none;
+  padding: 0px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+
+
+.button {
+  border: solid 1px rgba(0, 0, 0, 0.5);
+  padding: 2px 5px;
+  cursor: pointer;
 }
 
 .row-color-0 {

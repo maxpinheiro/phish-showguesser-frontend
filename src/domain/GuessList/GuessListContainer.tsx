@@ -11,8 +11,9 @@ import { getRunById } from "../../api/Runs.api";
 import { Run, RunID } from "../../types/Run.type";
 import { User, UserID } from "../../types/User.type";
 import { Link } from "react-router-dom";
-import { Oval } from "react-loader-spinner";
 import GuessList from "./GuessList";
+import RunInfo from "../../shared/component/RunInfo";
+import LoadingSpinner from "../../shared/icons/LoadingSpinner";
 
 
 const GuessListContainer: React.FC = () => {
@@ -73,24 +74,13 @@ const GuessListContainer: React.FC = () => {
                 <p className="header">Guesses</p>
                 {
                     status === 'loading' &&
-                    <>
-                        <Oval 
-                            width={100} height={100}
-                            strokeWidth={5} color="#E01212" secondaryColor="#AB2626"
-                        />
-                        <p>Loading...</p>
-                    </>
+                    <LoadingSpinner />
                 }
                 {
-                    status === 'loaded' &&
+                    status === 'loaded' && run &&
                     <>
-                        {
-                            run &&
-                            <div className="column--centered">
-                                <p>{run.name}</p>
-                                <p>{formatDateRange(run.dates, true)}</p>
-                            </div>  
-                        }
+                        <RunInfo run={run} />
+                        <div className="my-10" />
                         <div className="w-100">
                             <GuessList organizedGuesses={organizedGuesses} users={organizedUsers} />
                         </div>

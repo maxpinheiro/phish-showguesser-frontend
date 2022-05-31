@@ -11,7 +11,8 @@ export const apiRoot = 'http://localhost:5000';
 export enum ResponseStatus {
   Success = 200,
   UnknownError = 500,
-  NotFound = 404
+  NotFound = 404,
+  Unauthorized = 401
 }
 
 export const store = configureStore({

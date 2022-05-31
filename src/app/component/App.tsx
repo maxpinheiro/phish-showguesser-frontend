@@ -1,10 +1,11 @@
 import React from 'react';
+import Navbar from '../../shared/component/Navbar';
 import AppRouter from '../App.router';
-import './App.css';
 
 function App() {
   return (
     <div className="App">
+      <Navbar />
       <AppRouter />
     </div>
   );

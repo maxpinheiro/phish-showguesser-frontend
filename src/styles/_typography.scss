@@ -14,19 +14,59 @@ a {
 .header {
     font-size: 48px;
     font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 // SIZES
 
 // COLORS
 
+.text-black {
+    color: black;
+}
+
+.text-white {
+    color: white;
+}
+
 .text-50pct {
     color: rgba(0, 0, 0, 0.5);
 }
 
 // UTILITIES
+.text-centered {
+    text-align: center;
+}
 
 // DECORATIONS/STYLES
+
+.font-light {
+    font-weight: 300;
+}
+
+.font-normal {
+    font-weight: 400;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 700;
+}
 
 .text-crossed {
   text-decoration: line-through;
