@@ -6,10 +6,16 @@ import { ResponseStatus } from "../../app/store/store";
 import { selectUserId } from "../../domain/Authentication/Authentication.store";
 import { User } from "../../types/User.type";
 import { ReactComponent as Logo} from "../icons/Logo.svg";
+import { ReactComponent as Donut } from "../icons/Donut.svg";
+import Modal from "react-modal";
+import SettingsModal from "./SettingsModal";
+
+Modal.setAppElement('#root');
 
 const Navbar: React.FC = () => {
     const currentUserId = useSelector(selectUserId);
     const [ currentUser, setCurrentUser ] = useState<User | null>(null);
+    const [ settingsModalOpen, setModalOpen ] = useState(false);
 
     useEffect(() => {
         if (currentUserId) {
@@ -18,16 +24,18 @@ const Navbar: React.FC = () => {
                     setCurrentUser(user);
                 }
             });
+        } else {
+            setCurrentUser(null);
         }
     }, [ currentUserId ]);
 
     return (
-        <div className="w-100 bg-gray text-white font-medium">
-            <div className="row--space-between align-center mx-10">
+        <div className="w-100 bg-secondary-1 text-white font-medium">
+            <div className="row--space-between align-center mx-20">
                 <div id="logo">
                     <Link to="/">
                         <div className="row align-center mx-bw-10">
-                            <Logo />
+                            <Donut className="fill-red" />
                             <p className="font-bold">Phishing For Phish</p>
                         </div>
                     </Link>
@@ -38,8 +46,16 @@ const Navbar: React.FC = () => {
                         <Link to="/login">Login</Link>
                     }
                     <Link to="/runs">Runs</Link>
+                    <div className="pointer" onClick={() => setModalOpen(true)}>
+                        <i className="bi bi-sliders text-white" />
+                    </div>
                 </div>
             </div>
+            <Modal isOpen={settingsModalOpen} onRequestClose={() => setModalOpen(false)}
+                contentLabel="Settings"
+            >
+                <SettingsModal close={() => setModalOpen(false)} />
+            </Modal>
         </div>
     );
 }

@@ -1,8 +1,41 @@
 
+// COLOR THEME
+
+// REDO THEMES
+
+$theme-1: ("primary": #4DA167, "secondary": #086788, "tertiary": #896978, "quaternary": #BA274A);
+
+$themes: $theme-1,;
+
+@for $i from 1 through length($themes) {
+    $theme: nth($themes, $i);
+    @each $name, $color in $theme {
+        .bg-#{$name}-#{$i} {
+            background-color: $color;
+        }
+    
+        .text-#{$name}-#{$i} {
+            color: $color;
+        }
+    }
+}
+
+.fill-red, .fill-red * {
+    fill: #BA274A;
+}
+
 .bg-gray {
     background-color: #8892AA;
 }
 
 .bg-gray-200 {
     background-color: rgba(0, 0, 0, 0.2);
+}
+
+.bg-light-gray {
+    background-color: #DDDDDD;
+}
+
+.bg-black-10 {
+    background-color: rgba(0, 0, 0, 0.1);
 }

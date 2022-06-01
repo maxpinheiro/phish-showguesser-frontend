@@ -68,7 +68,7 @@ const ProfilePage: React.FC = () => {
     return (
         <div className="column--centered">
             {
-                status === "loading" && <LoadingSpinner />
+                status === "loading" && <><div className="h-20vh" /><LoadingSpinner /></>
             }
             { 
                 status === "loaded" && user && <UserInfo user={user} scoreRecordOrganized={scoreRecordOrganized} runRecordOrganized={runRecordOrganized} />

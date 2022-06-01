@@ -44,13 +44,13 @@ const RunList: React.FC = () => {
             {
                 status === 'loaded' && runs && 
                 runs.map((run, idx) => (
-                    <div key={run.id} className={`column--centered w-100 row-color-${idx % 2} p-5-0`}>
+                    <div key={run.id} className={`column--centered w-100 ${idx % 2 ? 'bg-tertiary-1' : 'bg-primary-1'}`}>
                         <div className="pointer" onClick={() => setOpenRunId(runId => runId === run.id? null : run.id)}> 
-                            <p>{`${formatDateRange(run.dates)}: ${run.name}`}</p>
+                            <p className="my-15">{`${formatDateRange(run.dates)}: ${run.name}`}</p>
                         </div>
                         {
                             openRunId === run.id &&
-                            <div className="row--space-around w-100 p-5-0">
+                            <div className="row--space-around w-100 bg-black-10 py-10">
                                 <Link to={`/guesses/${run.id}/edit`}>Edit Your Guesses</Link>
                                 <Link to={`/guesses/${run.id}`}>View All Guesses</Link>
                                 <Link to={`/scores/${run.id}`}>Leaderboard</Link>

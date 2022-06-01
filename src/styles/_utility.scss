@@ -11,11 +11,11 @@
     }
 
     .ml-#{$i} {
-        margin-left: #{$i}px;
+        margin-left: #{$i}px !important;
     }
 
     .mr-#{$i} {
-        margin-right: #{$i}px;
+        margin-right: #{$i}px !important;
     }
 
     .my-#{$i} {
@@ -24,12 +24,26 @@
     }
 
     .mt-#{$i} {
-        margin-top: #{$i}px;
+        margin-top: #{$i}px !important;
     }
 
     .mb-#{$i} {
-        margin-bottom: #{$i}px;
+        margin-bottom: #{$i}px !important;
     }    
+}
+
+$higher-nums: 10, 15, 20, 25, 40, 50;
+
+@each $num in $higher-nums {
+    .mx-#{$num} {
+        margin-left: #{$num}px;
+        margin-right: #{$num}px;
+    }
+
+    .my-#{$num} {
+        margin-top: #{$num}px;
+        margin-bottom: #{$num}px;
+    }
 }
 
 .mx-bw-10 > *:not(:last-child) {
@@ -113,6 +127,8 @@
 .max-w-500 {
     max-width: 500px;
 }
+
+
 
 
 
